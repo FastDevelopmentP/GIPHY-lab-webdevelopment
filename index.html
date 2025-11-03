@@ -19,13 +19,14 @@
     <div class="container my-5">
       <h1 class="mb-4 text-center">Fetch a GIF</h1>
 
+      <!-- Search input (used for Step 10 Extra Credit) -->
       <div class="row justify-content-center mb-3">
         <div class="col-md-6">
           <input
             type="text"
             id="search-input"
             class="form-control"
-            placeholder="Search for a GIF"
+            placeholder="Search for a GIF (e.g., cats, football)"
           />
         </div>
       </div>
@@ -36,11 +37,10 @@
         </button>
       </div>
 
-      <!-- Results -->
+      <!-- Where GIFs render -->
       <div id="gif-container" class="row g-3"></div>
     </div>
 
-    <!-- Your JS (placed after the DOM so no defer needed) -->
     <script src="./js/script.js"></script>
   </body>
 </html>

@@ -1,45 +1,108 @@
-// Confirm the script has loaded
+/**********************
+ * Step 1 — Sanity check
+ **********************/
 console.log("script.js loaded");
 
-// Select key page elements
+/************************************
+ * Step 2 — Cache DOM element handles
+ ************************************/
 const gifContainer = document.querySelector("#gif-container");
-const fetchButton = document.querySelector("#fetch-gif-btn");
-const searchInput = document.querySelector("#search-input");
+const fetchButton  = document.querySelector("#fetch-gif-btn");
+const searchInput  = document.querySelector("#search-input");
 
-// Add a click event listener to the button
-fetchButton.addEventListener("click", async function () {
-  // Get the user's search term and remove extra spaces
-  const searchTerm = searchInput.value.trim();
+/***********************************************
+ * Step 4 — Temporary API key in client-side JS
+ ***********************************************/
+const API_KEY = "kRB3yQVxhHG7HfBAwbWk1eFfBTpMHdP3";
 
-  // Stop if the input is empty
-  if (!searchTerm) {
-    alert("Please enter a search term!");
-    return;
+/***************************************************************
+ * Step 5 — Endpoint from Giphy API Explorer (hardcoded query)
+ * Use /v1/gifs/search (returns GIF objects with image URLs).
+ ***************************************************************/
+const LIMIT  = 25;
+const RATING = "g";
+const LANG   = "en";
+const DEFAULT_QUERY = "cats"; // <-- hardcoded for Step 5e
+
+const endpoint =
+  `https://api.giphy.com/v1/gifs/search` +
+  `?api_key=${API_KEY}` +
+  `&q=${encodeURIComponent(DEFAULT_QUERY)}` +
+  `&limit=${LIMIT}` +
+  `&offset=0` +
+  `&rating=${RATING}` +
+  `&lang=${LANG}` +
+  `&bundle=messaging_non_clips`;
+
+/******************************************************
+ * Step 6 — Read the "Sending API Requests" resource
+ * (no code change; moving on to implementation)
+ ******************************************************/
+
+/******************************************************************
+ * Step 7 — Fetch GIFs and collect original image URLs in an array
+ ******************************************************************/
+async function fetchGifs(url) {
+  const res = await fetch(url);
+  if (!res.ok) {
+    throw new Error(`HTTP ${res.status}`);
   }
+  const data = await res.json();
 
-  // Build the Giphy API URL dynamically using the user's search term
-  const endpoint = `https://api.giphy.com/v1/gifs/search/tags?api_key=kRB3yQVxhHG7HfBAwbWk1eFfBTpMHdP3&q=${searchTerm}&limit=25&offset=0`;
+  // Map to original-sized image URLs
+  const images = data.data
+    .filter(item => item?.images?.original?.url)
+    .map(item => item.images.original.url);
+
+  // Preview in console for verification
+  console.log("Fetched image URLs:", images);
+
+  return images;
+}
+
+/*****************************************************************************************
+ * Step 8 — Display GIFs on the page when the button is clicked (uses Step 7 function)
+ * Also includes Extra Credit (Step 10): dynamic search if the input has a value
+ *****************************************************************************************/
+fetchButton.addEventListener("click", async function () {
+  // If the input is empty, we use the hardcoded endpoint from Step 5e.
+  const term = searchInput.value.trim();
+
+  // Build a dynamic endpoint if a search term exists (Extra Credit)
+  const url = term
+    ? (
+        `https://api.giphy.com/v1/gifs/search` +
+        `?api_key=${API_KEY}` +
+        `&q=${encodeURIComponent(term)}` +
+        `&limit=${LIMIT}` +
+        `&offset=0` +
+        `&rating=${RATING}` +
+        `&lang=${LANG}` +
+        `&bundle=messaging_non_clips`
+      )
+    : endpoint;
 
   try {
-    // Fetch data from the Giphy API
-    const response = await fetch(endpoint);
-    const data = await response.json();
+    const images = await fetchGifs(url);
 
-    // Extract image URLs
-    const images = data.data.map(gif => gif.images.original.url);
-
-    // Clear old GIFs
+    // Clear previous results
     gifContainer.innerHTML = "";
 
-    // Display new GIFs
-    for (let url of images) {
-      gifContainer.innerHTML += `<img src="${url}" class="col-3 mb-3 img-fluid" alt="GIF">`;
+    // Render images in a Bootstrap grid
+    for (const src of images) {
+      gifContainer.innerHTML += `
+        <div class="col-6 col-md-3">
+          <img src="${src}" class="img-fluid" alt="GIF">
+        </div>`;
     }
-
-    // Log useful info for debugging
-    console.log(`Search term: ${searchTerm}`);
-    console.log(images);
-  } catch (error) {
-    console.error("Error fetching GIFs:", error);
+  } catch (err) {
+    console.error("Error fetching GIFs:", err);
+    gifContainer.innerHTML = `
+      <div class="col-12">
+        <div class="alert alert-danger" role="alert">
+          Failed to fetch GIFs. Check the console for details.
+        </div>
+      </div>`;
   }
 });
+

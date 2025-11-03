@@ -1,1 +1,7 @@
-/* Add any custom CSS stylings you want here */
+/* Basic spacing and responsive images */
+#gif-container img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 6px;
+}
