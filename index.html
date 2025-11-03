@@ -1,11 +1,20 @@
+<!-- Declare the document type as HTML5 -->
 <!DOCTYPE html>
+<!-- Set the language of the page to English -->
 <html lang="en">
   <head>
+    <!-- Specify UTF-8 character encoding for proper text rendering -->
     <meta charset="UTF-8" />
+    <!-- Configure the viewport for responsive design -->
+    <!-- width=device-width ensures the page matches screen width -->
+    <!-- initial-scale=1 sets the initial zoom level -->
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- The page title that appears in the browser tab -->
     <title>Assignment #9: Giphy API</title>
 
-    <!-- Bootstrap CSS -->
+    <!-- Include Bootstrap 5 CSS framework from CDN -->
+    <!-- The integrity attribute ensures the file hasn't been tampered with -->
+    <!-- crossorigin="anonymous" allows the resource to be loaded without sending credentials -->
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css"
       rel="stylesheet"
@@ -13,15 +22,22 @@
       crossorigin="anonymous"
     />
 
+    <!-- Link to our custom CSS file for additional styling -->
     <link href="./css/style.css" rel="stylesheet" />
   </head>
   <body>
+    <!-- Main container with margin-y spacing of 5 units -->
     <div class="container my-5">
+      <!-- Page heading, centered with margin-bottom of 4 units -->
       <h1 class="mb-4 text-center">Fetch a GIF</h1>
 
-      <!-- Search input (used for Step 10 Extra Credit) -->
+      <!-- Search input section -->
+      <!-- Row container with centered content and bottom margin -->
       <div class="row justify-content-center mb-3">
+        <!-- Column that takes up 6 units on medium and larger screens -->
         <div class="col-md-6">
+          <!-- Text input field for searching GIFs -->
+          <!-- form-control class applies Bootstrap styling -->
           <input
             type="text"
             id="search-input"
@@ -31,16 +47,20 @@
         </div>
       </div>
 
+      <!-- Button container with flexbox centering and bottom margin -->
       <div class="d-flex justify-content-center mb-4">
+        <!-- Primary styled button that triggers GIF fetching -->
         <button id="fetch-gif-btn" class="btn btn-primary">
           Fetch a GIF
         </button>
       </div>
 
-      <!-- Where GIFs render -->
+      <!-- Container where GIFs will be dynamically rendered -->
+      <!-- Uses Bootstrap grid with 3 units of gap between items -->
       <div id="gif-container" class="row g-3"></div>
     </div>
 
+    <!-- Include our JavaScript file that handles the Giphy API interaction -->
     <script src="./js/script.js"></script>
   </body>
 </html>
